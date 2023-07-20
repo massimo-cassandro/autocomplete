@@ -150,7 +150,7 @@ export default function (params = {}) {
         threshold: 3,
         data: {
           src: async (query) => {
-            const ac_url = app_data.baseUrl + params.ac_url +
+            const ac_url = params.ac_url +
               (params.test_mode? '' : encodeURIComponent(query)) + extra_query_params_string;
 
 

@@ -1,0 +1,151 @@
+// TODO completare (NON USARE)
+// TODO non sass?
+
+// basato sul css di @tarekraafat/autocomplete.js
+@use 'sass:map';
+
+.hmenu-subsection-emulazione {
+  overflow-y: visible;
+}
+
+.ac-autocomplete-wrapper { // assegnato all'elemento .form-group
+
+  --ac-color: #333;
+  --ac-bg-color: #fff;
+  --ac-border-color: #666;
+  --ac-box-shadow: 0 0 10px rgb(0 0 0 / .6);
+  --ac-list-item-bg: #fff;
+
+  position: relative;
+
+  ul {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+    max-height: 14rem;
+    padding: 0;
+    margin: .2rem 0 0;
+    overflow-y: scroll;
+    color: var(--ac-color);
+    background-color: var(--ac-bg-color);
+    border: 1px solid var(--ac-border-color);
+    border-radius: .6rem;
+    outline: none;
+    box-shadow: var(--ac-box-shadow);
+
+    &[hidden],
+    &:empty {
+      display: block;
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    li {
+      padding: 0;
+      margin: .3rem;
+      text-align: left;
+      list-style: none;
+
+      /* stylelint-disable declaration-no-important, max-nesting-depth, selector-max-compound-selectors */
+      > div {
+        --item-color: var(--ada-secondary);
+        --item-color-rgb: var(--ada-secondary-rgb);
+
+        padding: .3rem .5rem;
+        background-color: var(--ac-list-item-bg);
+        border-radius: .35rem;
+        transition: all .2s ease;
+
+        .badge {
+          color: rgba(var(--ada-white-rgb), 1);
+          background-color: var(--item-color);
+        }
+
+        &:hover {
+          cursor: pointer;
+          background-color: var(--item-color) !important;
+          &, .text-muted {
+            color: rgba(var(--ada-white-rgb), 1) !important;
+          }
+          .badge {
+            color: var(--item-color) !important;
+            background-color: rgba(var(--ada-white-rgb), .7) !important;
+          }
+
+          mark {
+            border-color: currentColor;
+          }
+        }
+
+        &.alert-item{
+          --item-color: var(--ada-danger);
+          --item-color-rgb: var(--ada-danger-rgb);
+
+          &, .text-muted {
+            color: var(--item-color) !important;
+          }
+          background-color: rgba(var(--item-color-rgb), .1);
+          &:hover {
+            &, .text-muted {
+              color: rgba(var(--ada-white-rgb), 1) !important;
+            }
+          }
+        }
+
+        mark {
+          @include font-axis-variation($weight: 600, $italic: false, $usa-font-heading: false);
+          padding: 0;
+          color: currentColor;
+          background-color: transparent;
+          border-bottom: 4px double var(--ada-rosso);
+
+          // /* stylelint-disable-next-line max-nesting-depth  selector-max-type */
+          // &::selection {
+          //   color: rgba(#ffffff, 0);
+          //   background-color: rgba(#ffffff, 0);
+          // }
+        }
+      }
+      /* stylelint-enable declaration-no-important, max-nesting-depth, selector-max-compound-selectors */
+
+      // &[aria-selected='true'] {
+      //   background-color: var(--ada-grigio-2);
+      // }
+    }
+  }
+
+  .no-result {
+    padding: .4rem .6rem;
+    color: var(--ada-danger);
+  }
+}
+
+
+// badge multiple select
+.ac-badge {
+  margin: 0 .5rem .2rem 0;
+  font-size: .85rem;
+  line-height: 1;
+  white-space: nowrap;
+
+  &:has(.ac-badge-btn:hover) {
+    /* stylelint-disable-next-line declaration-no-important */
+    background-color: var(--ada-rosso) !important;
+  }
+}
+.ac-badge-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin-left: 4px;
+  font-size: 1.2em;
+  line-height: 1;
+  color: currentColor;
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+
+}

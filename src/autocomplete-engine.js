@@ -7,9 +7,9 @@ import autoComplete from '@tarekraafat/autocomplete.js';
 // crea il badge per l'opzione con select multiple
 // NB il listener del pulsante di rimozione richiede l'attivazione della procedura autocomplete
 export function autocomplete_make_badge(id, text, extra_class = null) {
-  return `<span class="badge rounded-pill text-bg-secondary ac-badge${extra_class? ` ${extra_class}` :''}">
+  return `<span class="ac-badge badge rounded-pill text-bg-secondary${extra_class? ` ${extra_class}` :''}" data-id="${id}">
     <span>${text}</span>
-    <button type="button" class="ac-badge-btn" data-id="${id}">&times;</button>
+    <button type="button" class="ac-badge-btn">&times;</button>
   </span>`;
 }
 
@@ -79,7 +79,7 @@ export default function (params = {}) {
 
 
       // callback autocomplete
-      // se presente viene invocato con tre argomenti: id, val e autocomplete field
+      // se presente viene invocato con 4 argomenti: id, val, autocomplete field element e list_display (outerHTML)
       callback: null
     };
 
@@ -193,6 +193,7 @@ export default function (params = {}) {
           highlight: true,
         },
         events: {
+
           input: {
             selection: (event) => {
               const selected_id = event.detail.selection.value.id,
@@ -229,7 +230,7 @@ export default function (params = {}) {
               autoCompleteJS.input.dataset.sel = selected_text;
 
               if(params.callback && typeof params.callback === 'function') {
-                params.callback(selected_id, selected_text, autoCompleteJS.input);
+                params.callback(selected_id, selected_text, autoCompleteJS.input, event.detail.selection.value.list_display);
               }
             }
           }
@@ -275,11 +276,15 @@ export default function (params = {}) {
         const btn = e.target.closest('.ac-badge-btn');
 
         if(btn) {
-          btn.closest('.ac-badge').remove();
-          select_field.querySelector(`option[value="${btn.dataset.id}"]`).remove();
+          const badge = btn.closest('.ac-badge'),
+            item_id = badge.dataset.id,
+            item_text = badge.querySelector(':scope > span').innerText;
+          badge.remove();
+          select_field.querySelector(`option[value="${item_id}"]`).remove();
 
-          if(params.badges_remove_callback && typeof badges_remove_callback === 'function') {
-            params.badges_remove_callback(btn.dataset.id, btn.querySelector(':scope > span').innerText);
+          if(params.badges_remove_callback && typeof params.badges_remove_callback === 'function') {
+
+            params.badges_remove_callback(item_id, item_text);
           }
         }
       }, false);

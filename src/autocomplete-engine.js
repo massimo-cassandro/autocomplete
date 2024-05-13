@@ -4,18 +4,27 @@ import autoComplete from '@tarekraafat/autocomplete.js';
 // https://tarekraafat.github.io/autoComplete.js/#/configuration
 
 
+// crea il badge per l'opzione con select multiple
+// NB il listener del pulsante di rimozione richiede l'attivazione della procedura autocomplete
+export function autocomplete_make_badge(id, text, extra_class = null) {
+  return `<span class="badge rounded-pill text-bg-secondary ac-badge${extra_class? ` ${extra_class}` :''}">
+    <span>${text}</span>
+    <button type="button" class="ac-badge-btn" data-id="${id}">&times;</button>
+  </span>`;
+}
+
 export default function (params = {}) {
 
   try {
 
     const default_params = {
-        placeholder: 'Inserisci tre o più caratteri',
-        ac_url: null, // url di ricerca, deve avere slash iniziali e finali
+      placeholder: 'Inserisci tre o più caratteri',
+      ac_url: null, // url di ricerca, deve avere slash iniziali e finali
 
-        // se true, non viene concatenata la stringa di ricerca all'url (utile se si usa un json)
-        test_mode: false,
+      // se true, non viene concatenata la stringa di ricerca all'url (utile se si usa un json)
+      test_mode: false,
 
-        /*
+      /*
           funzione che riceve il risultato del fetch ajax e restituisce un array
           di oggetti nella forma
           {
@@ -34,53 +43,47 @@ export default function (params = {}) {
             };
           });
         */
-        fetch_result_function: data => data,
+      fetch_result_function: data => data,
 
-        // elemento o funzione che restituisce l'elemento
-        autocomplete_field: null,
+      // elemento o funzione che restituisce l'elemento
+      autocomplete_field: null,
 
-        // oggetto opzione di parametri da accodare all'url di ricerca in modalità get
-        extra_query_params: {},
+      // oggetto opzione di parametri da accodare all'url di ricerca in modalità get
+      extra_query_params: {},
 
-        // name e id dell'elemento hidden su cui registrare l'id selezionato
-        // il `name` non viene utilizzato se l'elemento è già presente
-        hidden_name: null,
-        hidden_id: null,
+      // name e id dell'elemento hidden su cui registrare l'id selezionato
+      // il `name` non viene utilizzato se l'elemento è già presente
+      hidden_name: null,
+      hidden_id: null,
 
-        // elemento hidden, se presente `hidden_name` e `hidden_id` non vengono presi in considerazione
-        hidden_field: null,
+      // elemento hidden, se presente `hidden_name` e `hidden_id` non vengono presi in considerazione
+      hidden_field: null,
 
-        // se presente utilizza l'elemento select (già esistente) indicato
-        // se impostato, `hidden_name` e `hidden_id` vengono ignorati
-        // l'elemento select è considerato di tipo `multiple` se `select_multiple == true`
-        // nel caso di select multiple non è possibile inserire due voci con lo stesso id
-        select_id: null,
-        select_multiple: true,
+      // se presente utilizza l'elemento select (già esistente) indicato
+      // se impostato, `hidden_name` e `hidden_id` vengono ignorati
+      // l'elemento select è considerato di tipo `multiple` se `select_multiple == true`
+      // nel caso di select multiple non è possibile inserire due voci con lo stesso id
+      select_id: null,
+      select_multiple: true,
 
-        // id dell'elemento in cui generare i badge delle opzioni selezionate
-        // Solo se `select_id` è impostato, per visualizzazione ed editing delle voci scelte.
-        // Se non presente, viene ignorato ma è necessario predisporre autonomanente
-        // la procedura di editing
-        // NB: solo per select multiple
-        select_badges_id: null,
+      // id dell'elemento in cui generare i badge delle opzioni selezionate
+      // Solo se `select_id` è impostato, per visualizzazione ed editing delle voci scelte.
+      // Se non presente, viene ignorato ma è necessario predisporre autonomanente
+      // la procedura di editing
+      // NB: solo per select multiple
+      select_badges_id: null,
 
-        // callback invocato quando un badge viene rimosso
-        // viene invocato con argomenti l'id e la voce (il testo del badge) dell'elemento rimosso
-        badges_remove_callback: null,
+      // callback invocato quando un badge viene rimosso
+      // viene invocato con argomenti l'id e la voce (il testo del badge) dell'elemento rimosso
+      badges_remove_callback: null,
 
 
-        // callback autocomplete
-        // se presente viene invocato con tre argomenti: id, val e autocomplete field
-        callback: null
-      },
+      // callback autocomplete
+      // se presente viene invocato con tre argomenti: id, val e autocomplete field
+      callback: null
+    };
 
-      // crea il badge per l'opzione con select multiple
-      make_badge = (id, text) => {
-        return `<span class="badge rounded-pill text-bg-secondary ac-badge">
-          <span>${text}</span>
-          <button type="button" class="ac-badge-btn" data-id="${id}">&times;</button>
-        </span>`;
-      };
+
 
     params = {...default_params, ...params};
 
@@ -209,7 +212,7 @@ export default function (params = {}) {
 
                     if(badges_container) {
                       badges_container.insertAdjacentHTML('beforeend',
-                        make_badge(selected_id, selected_text)
+                        autocomplete_make_badge(selected_id, selected_text)
                       );
                     }
                   }
@@ -287,7 +290,7 @@ export default function (params = {}) {
         if(params.select_multiple && badges_container) {
           select_field.querySelectorAll('option').forEach(option => {
             badges_container.insertAdjacentHTML('beforeend',
-              make_badge(option.value, option.innerHTML)
+              autocomplete_make_badge(option.value, option.innerHTML)
             );
           });
         } else {

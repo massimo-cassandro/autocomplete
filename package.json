@@ -1,7 +1,7 @@
 {
   "name": "@massimo-cassandro/autocomplete",
   "description": "Implementation of `@tarekraafat/autocomplete.js` to manage key-value items",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "license": "MIT",
   "author": "Massimo Cassandro",
   "main": "index.js",
@@ -20,8 +20,8 @@
   "scripts": {
     "UPD-version": "npx update-version #--config=./dev-utilities.config.mjs",
     "upd@m": "npx upd@m",
-    "npm update": "npm update",
-    "npm publish": "npm publish"
+    "npm-update": "npm update",
+    "npm-publish": "npm publish"
   },
   "browserslist": [
     "last 1 version",
@@ -30,27 +30,21 @@
     "not ie <= 11",
     "> 3% in IT"
   ],
-  "stylelint": {
-    "extends": "@massimo-cassandro/linters-config/stylelintrc.js",
-    "ignoreFiles": [
-      "**/*.css"
-    ]
-  },
-  "eslintConfig": {
-    "extends": [
-      "./node_modules/@massimo-cassandro/linters-config/eslintrc.js"
-    ],
-    "ignorePatterns": []
-  },
   "files": [
     "src/**/*.{scss,css,js,jsx,map}",
     "index.js"
   ],
-  "devDependencies": {
-    "@massimo-cassandro/dev-utilities": "^1.18.1",
-    "@massimo-cassandro/linters-config": "^1.4.6"
-  },
   "dependencies": {
     "@tarekraafat/autocomplete.js": "^10.2.7"
+  },
+  "devDependencies": {
+    "@massimo-cassandro/dev-updater": "^1.0.2",
+    "@massimo-cassandro/eslint-config": "^1.1.1",
+    "@massimo-cassandro/stylelint-config": "^1.1.3",
+    "@stylistic/stylelint-plugin": "^2.1.2",
+    "eslint": "^8.57.0",
+    "stylelint": "^16.5.0",
+    "stylelint-config-css-modules": "^4.4.0",
+    "stylelint-config-twbs-bootstrap": "^14.1.0"
   }
 }

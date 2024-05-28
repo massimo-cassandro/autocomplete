@@ -72,8 +72,11 @@ export default function (params = {}) {
       badges_remove_callback: null,
 
       // funzione personalizzata per la costruzione dei badge
-      // viene invocata con gli argomenti `id`  e `text` e deve restituire il markup del badge
+      // viene invocata con argomento `event.detail.selection.value`, corrispondente
+      // all'oggetto ritornato da `fetch_result_function`
       // se `null`, viene utilizzato il markup di default
+      // NB: al momento, nel caso di elementi preregistrati, l'argomento di badges_builder
+      // contiene solo gli elementi `id` e `val`
       badges_builder: null,
 
 
@@ -86,8 +89,8 @@ export default function (params = {}) {
 
     params = {...default_params, ...params};
 
-    params.badges_builder ??= ({id, text}) => `<span class="ac-badge badge rounded-pill text-bg-secondary" data-id="${id}">` +
-      `<span>${text}</span>` +
+    params.badges_builder ??= (result_obj) => `<span class="ac-badge badge rounded-pill text-bg-secondary" data-id="${result_obj.id}">` +
+      `<span>${result_obj.val}</span>` +
         '<button type="button" class="ac-badge-btn">&times;</button>' +
       '</span>';
 
@@ -200,6 +203,7 @@ export default function (params = {}) {
 
           input: {
             selection: (event) => {
+              // console.log(event.detail.selection.value);
 
               const selected_id = event.detail.selection.value.id,
                 selected_text = event.detail.selection.value.val;
@@ -218,7 +222,7 @@ export default function (params = {}) {
 
                     if(badges_container) {
                       badges_container.insertAdjacentHTML('beforeend',
-                        params.badges_builder(selected_id, selected_text)
+                        params.badges_builder(event.detail.selection.value)
                       );
                     }
                   }
@@ -242,7 +246,7 @@ export default function (params = {}) {
         }
       }); // end autoComplete
 
-      // TODO
+      // TODO[epic=autocomplete]
       // migliorare, rendere più efficiente la chiamata del callback
 
       // reset hidden
@@ -300,7 +304,7 @@ export default function (params = {}) {
         if(params.select_multiple && badges_container) {
           select_field.querySelectorAll('option').forEach(option => {
             badges_container.insertAdjacentHTML('beforeend',
-              params.badges_builder(option.value, option.innerHTML)
+              params.badges_builder({id: option.value, val: option.innerHTML})
             );
           });
         } else {

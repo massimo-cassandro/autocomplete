@@ -200,7 +200,7 @@ export default function (params = {}) {
 
           input: {
             selection: (event) => {
-              console.log(event);
+
               const selected_id = event.detail.selection.value.id,
                 selected_text = event.detail.selection.value.val;
 

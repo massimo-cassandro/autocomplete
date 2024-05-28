@@ -4,15 +4,6 @@ import autoComplete from '@tarekraafat/autocomplete.js';
 // https://tarekraafat.github.io/autoComplete.js/#/configuration
 
 
-// crea il badge per l'opzione con select multiple
-// NB il listener del pulsante di rimozione richiede l'attivazione della procedura autocomplete
-export function autocomplete_make_badge(id, text, extra_class = null) {
-  return `<span class="ac-badge badge rounded-pill text-bg-secondary${extra_class? ` ${extra_class}` :''}" data-id="${id}">
-    <span>${text}</span>
-    <button type="button" class="ac-badge-btn">&times;</button>
-  </span>`;
-}
-
 export default function (params = {}) {
 
   try {
@@ -40,6 +31,9 @@ export default function (params = {}) {
               val: `#${item.id} ${item.agenzia} (${item.network})`,
               list_display: `#${item.id} ${item.agenzia} (${item.network})`+
                 (item.ragioneSociale? `<br><small>${item.ragioneSociale}</small>` : '—')
+
+              // opzionale:
+              __xxx__: item (o altri dati custom)
             };
           });
         */
@@ -71,11 +65,16 @@ export default function (params = {}) {
       // Se non presente, viene ignorato ma è necessario predisporre autonomanente
       // la procedura di editing
       // NB: solo per select multiple
-      select_badges_id: null,
+      badges_container_id: null,
 
       // callback invocato quando un badge viene rimosso
       // viene invocato con argomenti l'id e la voce (il testo del badge) dell'elemento rimosso
       badges_remove_callback: null,
+
+      // funzione personalizzata per la costruzione dei badge
+      // viene invocata con gli argomenti `id`  e `text` e deve restituire il markup del badge
+      // se `null`, viene utilizzato il markup di default
+      badges_builder: null,
 
 
       // callback autocomplete
@@ -86,6 +85,11 @@ export default function (params = {}) {
 
 
     params = {...default_params, ...params};
+
+    params.badges_builder ??= ({id, text}) => `<span class="ac-badge badge rounded-pill text-bg-secondary" data-id="${id}">` +
+      `<span>${text}</span>` +
+        '<button type="button" class="ac-badge-btn">&times;</button>' +
+      '</span>';
 
 
     if(params.autocomplete_field && params.ac_url) {
@@ -125,8 +129,8 @@ export default function (params = {}) {
         if(!select_field) {
           throw `Elemento '${params.select_id}' non presente`;
         }
-        if(params.select_badges_id) {
-          badges_container = document.getElementById(params.select_badges_id);
+        if(params.badges_container_id) {
+          badges_container = document.getElementById(params.badges_container_id);
         }
 
       } else {
@@ -196,6 +200,7 @@ export default function (params = {}) {
 
           input: {
             selection: (event) => {
+              console.log(event);
               const selected_id = event.detail.selection.value.id,
                 selected_text = event.detail.selection.value.val;
 
@@ -213,7 +218,7 @@ export default function (params = {}) {
 
                     if(badges_container) {
                       badges_container.insertAdjacentHTML('beforeend',
-                        autocomplete_make_badge(selected_id, selected_text)
+                        params.badges_builder(selected_id, selected_text)
                       );
                     }
                   }
@@ -295,7 +300,7 @@ export default function (params = {}) {
         if(params.select_multiple && badges_container) {
           select_field.querySelectorAll('option').forEach(option => {
             badges_container.insertAdjacentHTML('beforeend',
-              autocomplete_make_badge(option.value, option.innerHTML)
+              params.badges_builder(option.value, option.innerHTML)
             );
           });
         } else {

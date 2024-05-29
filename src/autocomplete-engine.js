@@ -76,7 +76,9 @@ export default function (params = {}) {
       // all'oggetto ritornato da `fetch_result_function`
       // se `null`, viene utilizzato il markup di default
       // NB: al momento, nel caso di elementi preregistrati, l'argomento di badges_builder
-      // contiene solo gli elementi `id` e `val`
+      // contiene solo gli elementi `id`, `val`
+      // NB: è necessario che il badge abbia classe `ac-badge` e attributo `data-id`.
+      // La funzione deve restituire il markup completo del badge
       badges_builder: null,
 
 
@@ -215,14 +217,25 @@ export default function (params = {}) {
 
                 if(params.select_multiple) {
                   // impedisce i doppioni
-                  if(!select_field.querySelector(`option[value="${selected_id}"]`)) {
+                  const registered_option = select_field.querySelector(`option[value="${selected_id}"]`),
+                    new_badge = params.badges_builder(event.detail.selection.value);
+
+                  if(!registered_option) {
 
                     select_field.appendChild(option_element);
                     params.autocomplete_field.value = '';
 
                     if(badges_container) {
-                      badges_container.insertAdjacentHTML('beforeend',
-                        params.badges_builder(event.detail.selection.value)
+                      badges_container.insertAdjacentHTML('beforeend', new_badge);
+                    }
+
+                  // replace del badge per avere sempre la versione più recente
+                  } else {
+                    registered_option.replaceWith(option_element);
+                    if(badges_container) {
+                      const prev_badge = badges_container.querySelector(`.ac-badge[data-id="${selected_id}"]`);
+                      prev_badge.replaceWith(
+                        new DOMParser().parseFromString(new_badge, 'text/html').body.childNodes[0]
                       );
                     }
                   }
@@ -299,11 +312,13 @@ export default function (params = {}) {
       }, false);
 
       // aggiunta voci o badges di eventuali valori preregistrati
+      // TODO[epic=autocomplete] modalità per recuperare gli stessi dati del json ajax
       if(select_field) {
 
         if(params.select_multiple && badges_container) {
           select_field.querySelectorAll('option').forEach(option => {
             badges_container.insertAdjacentHTML('beforeend',
+
               params.badges_builder({id: option.value, val: option.innerHTML})
             );
           });

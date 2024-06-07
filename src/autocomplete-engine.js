@@ -312,14 +312,16 @@ export default function (params = {}) {
       }, false);
 
       // aggiunta voci o badges di eventuali valori preregistrati
-      // TODO[epic=autocomplete] modalità per recuperare gli stessi dati del json ajax
       if(select_field) {
 
         if(params.select_multiple && badges_container) {
+          // eventuali attributi data dell'option vengono aggiunti
+          // alla funzione `badges_builder`, con chiave `dataset`
+
           select_field.querySelectorAll('option').forEach(option => {
             badges_container.insertAdjacentHTML('beforeend',
 
-              params.badges_builder({id: option.value, val: option.innerHTML})
+              params.badges_builder({id: option.value, val: option.innerHTML, dataset: {...option.dataset}})
             );
           });
         } else {

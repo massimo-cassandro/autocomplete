@@ -72,14 +72,20 @@ export default function (params = {}) {
       badges_remove_callback: null,
 
       // funzione personalizzata per la costruzione dei badge
-      // viene invocata con argomento `event.detail.selection.value`, corrispondente
-      // all'oggetto ritornato da `fetch_result_function`
+      // viene invocata con argomenti `event.detail.selection.value`, e l'oggetto `params`.
+      // Il primo corrisponde all'oggetto ritornato da `fetch_result_function`
       // se `null`, viene utilizzato il markup di default
-      // NB: al momento, nel caso di elementi preregistrati, l'argomento di badges_builder
+      // NB: al momento, nel caso di elementi preregistrati, il primo argomento di badges_builder
       // contiene solo gli elementi `id`, `val`
       // NB: è necessario che il badge abbia classe `ac-badge` e attributo `data-id`.
       // La funzione deve restituire il markup completo del badge
       badges_builder: null,
+
+      // classe assegnata allo span che contiene il testo del badge
+      badge_label_class: 'ac-badge-label',
+
+      // classe assegnata al pulsante di rimozione del badge
+      badge_btn_class: 'ac-badge-btn',
 
 
       // callback autocomplete
@@ -91,9 +97,9 @@ export default function (params = {}) {
 
     params = {...default_params, ...params};
 
-    params.badges_builder ??= (result_obj) => `<span class="ac-badge badge rounded-pill text-bg-secondary" data-id="${result_obj.id}">` +
-      `<span>${result_obj.val}</span>` +
-        '<button type="button" class="ac-badge-btn">&times;</button>' +
+    params.badges_builder ??= (result_obj, params) => `<span class="ac-badge badge rounded-pill text-bg-secondary" data-id="${result_obj.id}">` +
+      `<span class="${params.badge_label_class}">${result_obj.val}</span>` +
+        `<button type="button" class="${params.badge_btn_class}">&times;</button>` +
       '</span>';
 
 
@@ -218,7 +224,7 @@ export default function (params = {}) {
                 if(params.select_multiple) {
                   // impedisce i doppioni
                   const registered_option = select_field.querySelector(`option[value="${selected_id}"]`),
-                    new_badge = params.badges_builder(event.detail.selection.value);
+                    new_badge = params.badges_builder(event.detail.selection.value, params);
 
                   if(!registered_option) {
 
@@ -295,7 +301,7 @@ export default function (params = {}) {
 
       // listener su badges
       badges_container?.addEventListener('click', e => {
-        const btn = e.target.closest('.ac-badge-btn');
+        const btn = e.target.closest(`.${params.badge_btn_class}`);
 
         if(btn) {
           const badge = btn.closest('.ac-badge'),
@@ -321,7 +327,7 @@ export default function (params = {}) {
           select_field.querySelectorAll('option').forEach(option => {
             badges_container.insertAdjacentHTML('beforeend',
 
-              params.badges_builder({id: option.value, val: option.innerHTML, dataset: {...option.dataset}})
+              params.badges_builder({id: option.value, val: option.innerHTML, dataset: {...option.dataset}}, params)
             );
           });
         } else {

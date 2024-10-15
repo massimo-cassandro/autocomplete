@@ -90,7 +90,10 @@ export default function (params = {}) {
 
       // callback autocomplete
       // se presente viene invocato con 4 argomenti: id, val, autocomplete field element e list_display (outerHTML)
-      callback: null
+      callback: null,
+
+      // classe aggiuntiva opzionale per la lista dei risultati
+      resultList_extra_class: null
     };
 
 
@@ -189,6 +192,8 @@ export default function (params = {}) {
           cache: false
         },
         resultsList: {
+          class: params.resultList_extra_class,
+
           destination: '#' + params.autocomplete_field.id,
           element: (list, data) => {
             if (!data.results.length) {

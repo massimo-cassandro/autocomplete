@@ -93,7 +93,10 @@ export default function (params = {}) {
       callback: null,
 
       // classe aggiuntiva opzionale per la lista dei risultati
-      resultList_extra_class: null
+      resultList_extra_class: null,
+
+      // classe aggiuntiva opzionale per il wrapper esterno
+      wrapper_extra_class: null
     };
 
 
@@ -123,6 +126,9 @@ export default function (params = {}) {
 
 
       params.autocomplete_field.closest('.form-group').classList.add('ac-autocomplete-wrapper');
+      if(params.wrapper_extra_class) {
+        params.autocomplete_field.closest('.form-group').classList.add(params.wrapper_extra_class);
+      }
 
       let extra_query_params = [];
       for(const i in params.extra_query_params) {

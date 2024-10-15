@@ -89,7 +89,7 @@ export default function (params = {}) {
 
 
       // callback autocomplete
-      // se presente viene invocato con 4 argomenti: id, val, autocomplete field element e list_display (outerHTML)
+      // se presente viene invocato con 5 argomenti: id, val, autocomplete field element, list_display (outerHTML) e row
       callback: null,
 
       // classe aggiuntiva opzionale per la lista dei risultati
@@ -269,7 +269,7 @@ export default function (params = {}) {
               autoCompleteJS.input.dataset.sel = selected_text;
 
               if(params.callback && typeof params.callback === 'function') {
-                params.callback(selected_id, selected_text, autoCompleteJS.input, event.detail.selection.value.list_display);
+                params.callback(selected_id, selected_text, autoCompleteJS.input, event.detail.selection.value.list_display, event.detail.selection.value.row);
               }
             }
           }

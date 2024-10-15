@@ -10,3 +10,4 @@
 2024-07-26T12:54:45.767Z |            1.3.0 | New params for badge
 2024-10-15T12:45:13.554Z |            1.4.0 | resultList extra class option
 2024-10-15T13:02:34.445Z |            1.4.1 | `wrapper_extra_class` option
+2024-10-15T13:35:38.101Z |            1.4.2 | callback row argument

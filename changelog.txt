@@ -11,3 +11,4 @@
 2024-10-15T12:45:13.554Z |            1.4.0 | resultList extra class option
 2024-10-15T13:02:34.445Z |            1.4.1 | `wrapper_extra_class` option
 2024-10-15T13:35:38.101Z |            1.4.2 | callback row argument
+2024-10-16T08:41:01.289Z |            1.4.3 | comment fix

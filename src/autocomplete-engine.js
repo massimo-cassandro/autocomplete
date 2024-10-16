@@ -90,6 +90,7 @@ export default function (params = {}) {
 
       // callback autocomplete
       // se presente viene invocato con 5 argomenti: id, val, autocomplete field element, list_display (outerHTML) e row
+      // NB: row viene istanziato solo dopo la selezione di un'opzione
       callback: null,
 
       // classe aggiuntiva opzionale per la lista dei risultati

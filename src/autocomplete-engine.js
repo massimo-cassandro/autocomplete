@@ -43,6 +43,8 @@ export default function (params = {}) {
       autocomplete_field: null,
 
       // oggetto opzione di parametri da accodare all'url di ricerca in modalità get
+      // i valori delle chiavi possono essere singole stringhe o numeri oppure array
+      // es. {param1: 'val1', param2: ['val2'. 'val3']}
       extra_query_params: {},
 
       // name e id dell'elemento hidden su cui registrare l'id selezionato

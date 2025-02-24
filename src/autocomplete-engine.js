@@ -49,10 +49,11 @@ export default function (params = {}) {
 
       // name e id dell'elemento hidden su cui registrare l'id selezionato
       // il `name` non viene utilizzato se l'elemento è già presente
+      // se nessuno tra hidden_id, hidden_field e select_id è presente, l'id del valore selezionato non viene gestito
       hidden_name: null,
       hidden_id: null,
 
-      // elemento hidden, se presente `hidden_name` e `hidden_id` non vengono presi in considerazione
+      // elemento hidden; se impostato e se presenti, `hidden_name` e `hidden_id` non vengono presi in considerazione
       hidden_field: null,
 
       // se presente utilizza l'elemento select (già esistente) indicato
@@ -162,7 +163,7 @@ export default function (params = {}) {
         if(params.hidden_field) {
           hidden_field = params.hidden_field;
 
-        } else {
+        } else if(params.hidden_id) {
           hidden_field = document.getElementById(params.hidden_id);
           if(!hidden_field) {
             params.autocomplete_field.insertAdjacentHTML('afterend',
@@ -265,7 +266,7 @@ export default function (params = {}) {
                   select_field.appendChild(option_element);
                 }
 
-              } else {
+              } else if (hidden_field) {
                 hidden_field.value = selected_id;
               }
 

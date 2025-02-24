@@ -13,3 +13,4 @@
 2024-10-15T13:35:38.101Z |            1.4.2 | callback row argument
 2024-10-16T08:41:01.289Z |            1.4.3 | comment fix
 2025-02-24T10:36:51.860Z |            1.4.4 | upd docs
+2025-02-24T10:48:17.756Z |            1.5.0 | Possibilità di non gestire i campi relativi al valore selezionato

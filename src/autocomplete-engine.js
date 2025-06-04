@@ -3,113 +3,110 @@ import autoComplete from '@tarekraafat/autocomplete.js';
 
 // https://tarekraafat.github.io/autoComplete.js/#/configuration
 
+export const ac_default_params = {
+  placeholder: 'Inserisci tre o più caratteri',
+  ac_url: null, // url di ricerca, deve avere slash iniziali e finali
+
+  // se true, non viene concatenata la stringa di ricerca all'url (utile se si usa un json)
+  test_mode: false,
+
+  /*
+      funzione che riceve il risultato del fetch ajax e restituisce un array
+      di oggetti nella forma
+      {
+        id             <== id dell'elemento
+        val            <== valore da visualizzare come risultato della selezione
+        list_display   <== stringa visualizzata nell'elenco
+      }
+
+      esempio:
+      data => data.map(item => {
+        return {
+          id: item.id,
+          val: `#${item.id} ${item.agenzia} (${item.network})`,
+          list_display: `#${item.id} ${item.agenzia} (${item.network})`+
+            (item.ragioneSociale? `<br><small>${item.ragioneSociale}</small>` : '—')
+
+          // opzionale:
+          __xxx__: item (o altri dati custom)
+        };
+      });
+    */
+  fetch_result_function: data => data,
+
+  // elemento o funzione che restituisce l'elemento
+  autocomplete_field: null,
+
+  // oggetto opzione di parametri da accodare all'url di ricerca in modalità get
+  // i valori delle chiavi possono essere singole stringhe o numeri oppure array
+  // es. {param1: 'val1', param2: ['val2'. 'val3']}
+  extra_query_params: {},
+
+  // name e id dell'elemento hidden su cui registrare l'id selezionato
+  // il `name` non viene utilizzato se l'elemento è già presente
+  // se nessuno tra hidden_id, hidden_field e select_id è presente, l'id del valore selezionato non viene gestito
+  hidden_name: null,
+  hidden_id: null,
+
+  // elemento hidden; se impostato e se presenti, `hidden_name` e `hidden_id` non vengono presi in considerazione
+  hidden_field: null,
+
+  // se presente utilizza l'elemento select (già esistente) indicato
+  // se impostato, `hidden_name` e `hidden_id` vengono ignorati
+  // l'elemento select è considerato di tipo `multiple` se `select_multiple == true`
+  // nel caso di select multiple non è possibile inserire due voci con lo stesso id
+  select_id: null,
+  select_multiple: true,
+
+  // id dell'elemento in cui generare i badge delle opzioni selezionate
+  // Solo se `select_id` è impostato, per visualizzazione ed editing delle voci scelte.
+  // Se non presente, viene ignorato ma è necessario predisporre autonomanente
+  // la procedura di editing
+  // NB: solo per select multiple
+  badges_container_id: null,
+
+  // callback invocato quando un badge viene rimosso
+  // viene invocato con argomenti l'id e la voce (il testo del badge) dell'elemento rimosso
+  badges_remove_callback: null,
+
+  // funzione personalizzata per la costruzione dei badge
+  // viene invocata con argomenti `event.detail.selection.value`, e l'oggetto `params`.
+  // Il primo corrisponde all'oggetto ritornato da `fetch_result_function`
+  // se `null`, viene utilizzato il markup di default
+  // NB: al momento, nel caso di elementi preregistrati, il primo argomento di badges_builder
+  // contiene solo gli elementi `id`, `val`
+  // NB: è necessario che il badge abbia classe `ac-badge` e attributo `data-id`.
+  // La funzione deve restituire il markup completo del badge
+  badges_builder: null,
+
+  // classe assegnata allo span che contiene il testo del badge
+  badge_label_class: 'ac-badge-label',
+
+  // classe assegnata al pulsante di rimozione del badge
+  badge_btn_class: 'ac-badge-btn',
+
+
+  // callback autocomplete
+  // se presente viene invocato con 5 argomenti: id, val, autocomplete field element, list_display (outerHTML) e row
+  // NB: row viene istanziato solo dopo la selezione di un'opzione
+  callback: null,
+
+  // classe aggiuntiva opzionale per la lista dei risultati
+  resultList_extra_class: null,
+
+  // classe aggiuntiva opzionale per il wrapper esterno
+  wrapper_extra_class: null
+};
 
 export default function (params = {}) {
 
   try {
 
-    const default_params = {
-      placeholder: 'Inserisci tre o più caratteri',
-      ac_url: null, // url di ricerca, deve avere slash iniziali e finali
+    params = {...ac_default_params, ...params};
 
-      // se true, non viene concatenata la stringa di ricerca all'url (utile se si usa un json)
-      test_mode: false,
-
-      /*
-          funzione che riceve il risultato del fetch ajax e restituisce un array
-          di oggetti nella forma
-          {
-            id             <== id dell'elemento
-            val            <== valore da visualizzare come risultato della selezione
-            list_display   <== stringa visualizzata nell'elenco
-          }
-
-          esempio:
-          data => data.map(item => {
-            return {
-              id: item.id,
-              val: `#${item.id} ${item.agenzia} (${item.network})`,
-              list_display: `#${item.id} ${item.agenzia} (${item.network})`+
-                (item.ragioneSociale? `<br><small>${item.ragioneSociale}</small>` : '—')
-
-              // opzionale:
-              __xxx__: item (o altri dati custom)
-            };
-          });
-        */
-      fetch_result_function: data => data,
-
-      // elemento o funzione che restituisce l'elemento
-      autocomplete_field: null,
-
-      // oggetto opzione di parametri da accodare all'url di ricerca in modalità get
-      // i valori delle chiavi possono essere singole stringhe o numeri oppure array
-      // es. {param1: 'val1', param2: ['val2'. 'val3']}
-      extra_query_params: {},
-
-      // name e id dell'elemento hidden su cui registrare l'id selezionato
-      // il `name` non viene utilizzato se l'elemento è già presente
-      // se nessuno tra hidden_id, hidden_field e select_id è presente, l'id del valore selezionato non viene gestito
-      hidden_name: null,
-      hidden_id: null,
-
-      // elemento hidden; se impostato e se presenti, `hidden_name` e `hidden_id` non vengono presi in considerazione
-      hidden_field: null,
-
-      // se presente utilizza l'elemento select (già esistente) indicato
-      // se impostato, `hidden_name` e `hidden_id` vengono ignorati
-      // l'elemento select è considerato di tipo `multiple` se `select_multiple == true`
-      // nel caso di select multiple non è possibile inserire due voci con lo stesso id
-      select_id: null,
-      select_multiple: true,
-
-      // id dell'elemento in cui generare i badge delle opzioni selezionate
-      // Solo se `select_id` è impostato, per visualizzazione ed editing delle voci scelte.
-      // Se non presente, viene ignorato ma è necessario predisporre autonomanente
-      // la procedura di editing
-      // NB: solo per select multiple
-      badges_container_id: null,
-
-      // callback invocato quando un badge viene rimosso
-      // viene invocato con argomenti l'id e la voce (il testo del badge) dell'elemento rimosso
-      badges_remove_callback: null,
-
-      // funzione personalizzata per la costruzione dei badge
-      // viene invocata con argomenti `event.detail.selection.value`, e l'oggetto `params`.
-      // Il primo corrisponde all'oggetto ritornato da `fetch_result_function`
-      // se `null`, viene utilizzato il markup di default
-      // NB: al momento, nel caso di elementi preregistrati, il primo argomento di badges_builder
-      // contiene solo gli elementi `id`, `val`
-      // NB: è necessario che il badge abbia classe `ac-badge` e attributo `data-id`.
-      // La funzione deve restituire il markup completo del badge
-      badges_builder: null,
-
-      // classe assegnata allo span che contiene il testo del badge
-      badge_label_class: 'ac-badge-label',
-
-      // classe assegnata al pulsante di rimozione del badge
-      badge_btn_class: 'ac-badge-btn',
-
-
-      // callback autocomplete
-      // se presente viene invocato con 5 argomenti: id, val, autocomplete field element, list_display (outerHTML) e row
-      // NB: row viene istanziato solo dopo la selezione di un'opzione
-      callback: null,
-
-      // classe aggiuntiva opzionale per la lista dei risultati
-      resultList_extra_class: null,
-
-      // classe aggiuntiva opzionale per il wrapper esterno
-      wrapper_extra_class: null
-    };
-
-
-
-    params = {...default_params, ...params};
-
-    params.badges_builder ??= (result_obj, params) => `<span class="ac-badge badge rounded-pill text-bg-secondary" data-id="${result_obj.id}">` +
-      `<span class="${params.badge_label_class}">${result_obj.val}</span>` +
-        `<button type="button" class="${params.badge_btn_class}">&times;</button>` +
+    params.badges_builder ??= (result_obj, bparams = params) => `<span class="ac-badge badge rounded-pill text-bg-secondary" data-id="${result_obj.id}">` +
+      `<span class="${bparams.badge_label_class}">${result_obj.val}</span>` +
+        `<button type="button" class="${bparams.badge_btn_class}">&times;</button>` +
       '</span>';
 
 

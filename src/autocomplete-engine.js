@@ -37,6 +37,9 @@ export const ac_default_params = {
   // elemento o funzione che restituisce l'elemento
   autocomplete_field: null,
 
+  // selettore dell'elemento contenitore di autocomplete_field e degli altri elementi
+  autocomplete_parent_selector: '.form-group',
+
   // oggetto opzione di parametri da accodare all'url di ricerca in modalità get
   // i valori delle chiavi possono essere singole stringhe o numeri oppure array
   // es. {param1: 'val1', param2: ['val2'. 'val3']}
@@ -126,9 +129,9 @@ export default function (params = {}) {
       params.autocomplete_field.dataset.sel = params.autocomplete_field.value;
 
 
-      params.autocomplete_field.closest('.form-group').classList.add('ac-autocomplete-wrapper');
+      params.autocomplete_field.closest(params.autocomplete_parent_selector).classList.add('ac-autocomplete-wrapper');
       if(params.wrapper_extra_class) {
-        params.autocomplete_field.closest('.form-group').classList.add(params.wrapper_extra_class);
+        params.autocomplete_field.closest(params.autocomplete_parent_selector).classList.add(params.wrapper_extra_class);
       }
 
       let extra_query_params = [];

@@ -339,7 +339,7 @@ export default function (params = {}) {
           // eventuali attributi data dell'option vengono aggiunti
           // alla funzione `badges_builder`, con chiave `dataset`
 
-          select_field.querySelectorAll('option').forEach(option => {
+          select_field.querySelectorAll('option[selected]').forEach(option => {
             badges_container.insertAdjacentHTML('beforeend',
 
               params.badges_builder({id: option.value, val: option.innerHTML, dataset: {...option.dataset}}, params)
